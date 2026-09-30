@@ -140,6 +140,9 @@ Supported connections: Google, Anthropic, OpenAI, DeepSeek, Model Studio (Qwen),
 Z.AI (GLM), OpenCode, and B.AI. The retired NVIDIA host is recognized only so
 old checkpoints still resume.
 
+Requests use a low temperature (0) for faithful, repeatable translation. Some
+reasoning models ignore the temperature setting.
+
 Cicero ships no model names, presets, or per-model token profiles. Models come
 from the selected provider's catalog, or from an exact model ID you enter. A
 catalog listing does not guarantee that the model supports document translation

@@ -376,6 +376,7 @@ class FluencyResponseTests(unittest.TestCase):
         args, kwargs = http.request.call_args
         self.assertEqual(args, ('POST', cfg.base_url + '/chat/completions', {'Authorization': 'Bearer ' + SECRET}))
         self.assertEqual(kwargs['json'], {'model': cfg.model, 'stream': False, 'max_tokens': 4096,
+            'temperature': app.TEMPERATURE,
             'messages': [{'role': 'system', 'content': 'system'}, {'role': 'user', 'content': 'draft'}]})
 
     def test_incomplete_verdict_is_not_accepted_even_if_pass_text_exists(self):
@@ -842,6 +843,8 @@ class HTTPTests(unittest.TestCase):
             cfg = app.Config(provider, model, base, SECRET, 128000, 24576)
             self.assertEqual(models.call(cfg, 'translator', 'system', 'source'), DRAFT)
         self.assertIn('max_completion_tokens', json.loads(calls[0].content))
+        self.assertEqual(json.loads(calls[0].content)['temperature'], app.TEMPERATURE)
+        self.assertEqual(json.loads(calls[1].content)['temperature'], app.TEMPERATURE)
         self.assertEqual(calls[1].headers['x-api-key'], SECRET)
         self.assertNotIn('authorization', calls[1].headers)
 

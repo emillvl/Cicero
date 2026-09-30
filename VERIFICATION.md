@@ -6,6 +6,8 @@ Verified against Python 3.12. **166 tests passed, plus 50 subtests, with 90% ove
 
 - Model selection uses the provider catalog, with filtering and exact-ID fallback. Fixed model names, preset choices, named model recommendations, per-model token profiles and model-specific reasoning overrides were removed.
 - Within one passage, the Blind Critic and the Alignment Inspector run concurrently (bounded by `MAX_PARALLEL_CALLS = 10`). Passages stay ordered so each still receives the previous approved translation as continuity context. Shared state (usage records, checkpoint stages, partial output, retry prompts) is guarded by locks, and unfinished stages are tracked in `pending_all` for crash-safe resume. A regression test asserts the two reviewers overlap.
+- Provider requests now send `temperature = 0` for faithful, repeatable output. A test asserts the field is present for both the OpenAI-compatible and Anthropic adapters.
+- A GitHub Actions workflow (`.github/workflows/tests.yml`) runs this offline suite on Python 3.11 and 3.12 for every push and pull request.
 - Existing saved runs retain their chosen model IDs, configured token budgets and completed stages. Current translation/review prompts and Google inference request fields are unchanged.
 - Usage is recorded before response validation and persisted across resume. Input, output and total counts include startup samples, refused/truncated replies and explicit retries when usage is returned. Cached/reasoning breakdowns are not counted twice.
 - A missing usage response remains unknown. Requests from older versions are explicitly excluded. Completed-stage reuse and export-only resume do not add tokens again.

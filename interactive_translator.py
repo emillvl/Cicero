@@ -33,6 +33,8 @@ REVIEW_FINDINGS_LIMIT = 1800
 # Passages stay ordered so continuity context is the immediately preceding approved
 # translation. Only independent calls inside one passage run at the same time.
 MAX_PARALLEL_CALLS = 10
+# Translation wants faithfulness and repeatability, not creative variation.
+TEMPERATURE = 0.0
 ROLES = ('translator', 'fluency', 'accuracy', 'fixer', 'auditor')
 ROLE_INFO = {
     'translator': ('Translator', 'Translates each source passage.'),
@@ -714,11 +716,11 @@ class Models:
             raise TranslationError('Request exceeds the conservative context budget. Reduce source target '
                                    'in advanced settings and start a separate run.')
         if cfg.provider == 'anthropic':
-            body = {'model': cfg.model, 'system': system, 'max_tokens': output,
+            body = {'model': cfg.model, 'system': system, 'max_tokens': output, 'temperature': TEMPERATURE,
                     'messages': [{'role': 'user', 'content': payload}]}
             endpoint = '/messages'
         else:
-            body = {'model': cfg.model, 'stream': False,
+            body = {'model': cfg.model, 'stream': False, 'temperature': TEMPERATURE,
                     'messages': [{'role': 'system', 'content': system}, {'role': 'user', 'content': payload}],
                     'max_completion_tokens' if cfg.provider == 'openai' else 'max_tokens': output}
             endpoint = '/chat/completions'

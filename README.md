@@ -217,17 +217,5 @@ are not part of the translator and are not run by the test suite.
 
 ## License
 
-Cicero is distributed under the Cicero License, which is based on the Apache
-License 2.0 structure and includes an additional attribution requirement for
-commercial use. See `LICENSE` for the authoritative terms. Commercial use
-requires attribution to Cicero and to its original author, Emil Valiyev, in a
-reasonably accessible location. The attribution must be substantially equivalent
-to:
-
-```text
-Uses Cicero — originally developed by Emil Valiyev.
-```
-
-`NOTICE` records the original authorship. The Cicero License is not the Apache
-License 2.0 and is not an OSI-approved license. It should be reviewed by a lawyer
-before you rely on it.
+Cicero is licensed under the Apache License, Version 2.0. See `LICENSE` for the
+full terms. `NOTICE` records the original authorship by Emil Valiyev.

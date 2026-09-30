@@ -1,0 +1,64 @@
+# Cicero runtime output. Never publish user documents or their results.
+translations/
+runs/
+
+# Cicero run artifacts
+*.received.txt
+checkpoint.json
+checkpoint.before-*.json
+translation.txt
+translation.partial.txt
+translation.docx
+translation.pdf
+review-notes.txt
+usage.json
+usage-summary.txt
+.run.lock
+score-report.json
+score-report.txt
+final-output.tr.txt
+translator-output.tr.txt
+
+# Evaluation data and outputs (not distributed)
+bleu_source*.txt
+bleu_reference*.txt
+doc_candidate*.tr.txt
+bleu_candidate*.tr.txt
+doc_*.txt
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# Logs
+*.log
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini

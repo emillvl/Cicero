@@ -6,8 +6,8 @@ UTF-8 text file. Translation does not preserve the source layout. Paragraph
 counts, heading markers, and list markers may change, because Cicero formats the
 text locally after translating it.
 
-The program is resumable. Every run writes to its own folder and keeps enough
-state to continue after a stop, a crash, or a provider error.
+Each run saves its progress in a separate folder, so you can continue after a
+stop, a crash, or a provider error.
 
 ## Requirements
 
@@ -124,8 +124,8 @@ correction attempts. Full mode adds an audit even when both initial reviews pass
 A failed or malformed review is never treated as approval.
 
 The passage target is 8,000 estimated source tokens, not 8,000 characters. Cicero
-labels its estimate honestly; it is a planning estimate, not the provider's exact
-tokenizer. It reserves output space using a 2.5x expansion allowance plus
+uses this estimate for planning; it does not use the provider's exact tokenizer.
+It reserves output space using a 2.5x expansion allowance plus
 overhead, and checks request size in UTF-8 bytes. By default, the last 1,000
 estimated tokens of the previous approved translation provide continuity
 context. There is no whole-book memory or external glossary, so terminology can
@@ -158,13 +158,12 @@ totals by provider, model, and role, using the counts returned by the API. If a
 request fails and reports no counts, its usage is marked unknown, not zero. The
 official DeepSeek connection can return the account's monetary balance when the
 session ends. Other connections report that balance is unavailable through them.
-This is an implementation limit, not a claim that other companies have no billing
-APIs, and it does not mean the balance is zero.
+An unavailable balance means Cicero cannot retrieve it through that connection;
+it does not mean the balance is zero or that the provider has no billing API.
 
 ## Privacy
 
-This section describes what the current implementation does. It is not a
-guarantee.
+The following describes the current implementation's data handling.
 
 - The text of each passage, the review prompts, and the draft are sent to the
   provider and model you select. The provider's own terms and retention policy

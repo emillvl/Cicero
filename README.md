@@ -1,4 +1,23 @@
-# Cicero
+<div align="center">
+
+<img src="assets/cicero-wordmark.svg" alt="Cicero" width="760">
+
+### Translation, subjected to review.
+
+**A model-agnostic document translation engine with independent criticism, alignment inspection, correction, and auditing.**
+
+![Python](https://img.shields.io/badge/Python-3.11%2B-171B1C?style=flat-square&logo=python&logoColor=F2EFE7)
+![License](https://img.shields.io/badge/License-Apache%202.0-BA8B55?style=flat-square)
+![OCR](https://img.shields.io/badge/OCR-Local-171B1C?style=flat-square)
+![Models](https://img.shields.io/badge/Model%20roles-5-BA8B55?style=flat-square)
+
+[Get started](#install-and-run-on-windows) · [Architecture](#how-a-run-works) · [Formats](#supported-documents) · [Providers](#providers) · [Privacy](#privacy) · [Tests](#development-and-tests)
+
+</div>
+
+---
+
+## Overview
 
 Cicero translates documents into readable plain text. It is an interactive Python
 program: you pick a file, choose a target language and a model, and it produces a
@@ -8,6 +27,31 @@ text locally after translating it.
 
 Each run saves its progress in a separate folder, so you can continue after a
 stop, a crash, or a provider error.
+
+
+### At a glance
+
+| **01 / Read** | **02 / Translate** | **03 / Review** | **04 / Deliver** |
+| :--- | :--- | :--- | :--- |
+| TXT, DOCX, PDF and images; local OCR where needed. | Choose a provider and model for each role, or use one model throughout. | Independent fluency and meaning checks; correction and auditing when required. | UTF-8 text, optional DOCX/PDF, checkpoints and separate review records. |
+
+> [!NOTE]
+> Cicero is designed for readable, reviewed translations, not pixel-perfect document reproduction. Automated review reduces certain risks but does not guarantee translation accuracy.
+
+
+<details>
+<summary><strong>Documentation index</strong></summary>
+
+| Using Cicero | Under the hood |
+| --- | --- |
+| [Requirements](#requirements) | [Passage size and reviewing](#passage-size-and-reviewing) |
+| [Installation](#install-and-run-on-windows) | [Providers](#providers) |
+| [Supported documents](#supported-documents) | [Token usage and balance](#token-usage-and-balance) |
+| [Output files](#output-files) | [Privacy](#privacy) |
+| [Resume](#resume) | [Limitations](#limitations) |
+| [Development and tests](#development-and-tests) | [Evaluation](#evaluation) |
+
+</details>
 
 ## Requirements
 
@@ -49,6 +93,38 @@ the optional startup samples.
 6. Each passage is translated, reviewed, corrected when needed, and audited.
 7. The finished text is saved as `translation.txt`. You can also export DOCX or
    PDF.
+
+
+### Translation architecture
+
+```mermaid
+flowchart TD
+    S["Source document"] --> E["Extract text / local OCR"]
+    E --> P["Split into ordered passages"]
+    P --> T["01 · Translator"]
+    T --> C["02 · Blind Critic"]
+    T --> I["03 · Alignment Inspector"]
+    C --> D{"Both reviews pass?"}
+    I --> D
+    D -- "Yes · balanced mode" --> O["Approved passage"]
+    D -- "Yes · full mode" --> A["05 · Final Auditor"]
+    D -- "No" --> F["04 · Fixer"]
+    F --> A
+    A -- "Pass" --> O
+    A -- "Correction needed" --> L{"Correction attempts remaining?"}
+    L -- "Yes" --> F
+    L -- "No" --> H["Stop / resolve failed stage"]
+    O --> K["Save progress"]
+    K --> N{"More passages?"}
+    N -- "Yes · continuity context" --> T
+    N -- "No" --> X["translation.txt / optional DOCX or PDF"]
+    classDef base fill:#171B1C,stroke:#BA8B55,color:#F2EFE7;
+    classDef accent fill:#BA8B55,stroke:#BA8B55,color:#171B1C;
+    class S,E,P,T,C,I,D,F,A,L,H,K,N base;
+    class O,X accent;
+```
+
+The two reviewers operate concurrently on the same draft; neither replaces the other. The diagram illustrates successful review decisions and the bounded correction path. Malformed or failed stages are never treated as approval.
 
 ### Roles
 
@@ -163,6 +239,9 @@ it does not mean the balance is zero or that the provider has no billing API.
 
 ## Privacy
 
+> [!IMPORTANT]
+> Translation requires sending text to your selected model provider. Local OCR does not make the entire translation process local.
+
 The following describes the current implementation's data handling.
 
 - The text of each passage, the review prompts, and the draft are sent to the
@@ -221,3 +300,12 @@ are not part of the translator and are not run by the test suite.
 
 Cicero is licensed under the Apache License, Version 2.0. See `LICENSE` for the
 full terms. `NOTICE` records the original authorship by Emil Valiyev.
+
+---
+
+<div align="center">
+<img src="assets/cicero-logo.svg" width="64" alt="Cicero emblem">
+
+**CICERO** · Developed by [Emil Valiyev](https://github.com/emillvl)
+
+</div>
